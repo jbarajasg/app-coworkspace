@@ -1,0 +1,155 @@
+<section class="space-y-6">
+  <header>
+    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Reporte de ocupación</h1>
+    <p class="mt-1 text-sm text-slate-500">
+      Métricas del período seleccionado sobre el horario operable (08:00–20:00).
+    </p>
+  </header>
+
+  <!-- Selector de período -->
+  <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
+    <div class="grid max-w-md gap-4 sm:grid-cols-2">
+      <div>
+        <label for="report-from" class="block text-sm font-medium text-slate-700">Desde</label>
+        <input
+          id="report-from"
+          type="date"
+          [value]="from()"
+          (change)="setFrom($event)"
+          class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+      </div>
+      <div>
+        <label for="report-to" class="block text-sm font-medium text-slate-700">Hasta</label>
+        <input
+          id="report-to"
+          type="date"
+          [value]="to()"
+          (change)="setTo($event)"
+          class="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-200"
+        />
+      </div>
+    </div>
+    @if (invalidRange()) {
+      <p class="mt-3 text-sm text-rose-600" role="alert">
+        La fecha final debe ser igual o posterior a la inicial.
+      </p>
+    } @else {
+      <p class="mt-3 text-xs text-slate-400">Analizando {{ report().daysInRange }} día(s).</p>
+    }
+  </div>
+
+  @if (error(); as message) {
+    <div class="rounded-2xl border border-rose-200 bg-rose-50 p-5 text-center" role="alert">
+      <p class="text-sm text-rose-700">{{ message }}</p>
+      <button
+        type="button"
+        (click)="spacesStore.load(); reservationsStore.load()"
+        class="mt-3 rounded-lg bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700"
+      >
+        Reintentar
+      </button>
+    </div>
+  } @else if (loading()) {
+    <div class="grid grid-cols-2 gap-4 lg:grid-cols-4" aria-hidden="true">
+      @for (i of [1, 2, 3, 4]; track i) {
+        <div class="h-28 animate-pulse rounded-2xl bg-slate-200"></div>
+      }
+    </div>
+  } @else {
+    @let r = report();
+
+    <!-- KPIs -->
+    <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p class="text-sm text-slate-500">Reservas</p>
+        <p class="mt-1 text-3xl font-bold text-slate-900">{{ r.totalReservations }}</p>
+        <p class="mt-1 text-xs text-slate-400">Confirmadas y completadas</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p class="text-sm text-slate-500">Horas reservadas</p>
+        <p class="mt-1 text-3xl font-bold text-slate-900">{{ hours(r.totalReservedMinutes) }}</p>
+        <p class="mt-1 text-xs text-slate-400">En {{ r.bySpace.length }} espacios</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p class="text-sm text-slate-500">Ocupación media</p>
+        <p class="mt-1 text-3xl font-bold text-indigo-600">{{ r.averageOccupancyPct }}%</p>
+        <p class="mt-1 text-xs text-slate-400">Del horario operable</p>
+      </div>
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+        <p class="text-sm text-slate-500">Canceladas con penalización</p>
+        <p
+          class="mt-1 text-3xl font-bold"
+          [class]="r.totalPenalizedCancellations > 0 ? 'text-rose-600' : 'text-slate-900'"
+        >
+          {{ r.totalPenalizedCancellations }}
+        </p>
+        <p class="mt-1 text-xs text-slate-400">RN-04</p>
+      </div>
+    </div>
+
+    <!-- Espacio destacado -->
+    @if (r.topSpace; as top) {
+      <div
+        class="rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 p-6 text-white shadow-sm"
+      >
+        <p class="text-sm font-medium text-indigo-200">Espacio más ocupado</p>
+        <div class="mt-1 flex flex-wrap items-baseline justify-between gap-2">
+          <p class="text-2xl font-bold">{{ top.spaceName }}</p>
+          <p class="text-sm text-indigo-100">
+            {{ top.occupancyPct }}% · {{ hours(top.reservedMinutes) }} · ${{
+              top.estimatedRevenue
+            }}
+            estimados
+          </p>
+        </div>
+      </div>
+    }
+
+    <!-- Ocupación por espacio -->
+    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
+      <div class="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 class="text-lg font-semibold text-slate-900">Ocupación por espacio</h2>
+        <p class="text-sm text-slate-500">
+          Ingresos estimados:
+          <span class="font-semibold text-slate-700">${{ r.totalEstimatedRevenue }}</span>
+        </p>
+      </div>
+      <ul class="mt-5 space-y-5">
+        @for (item of r.bySpace; track item.spaceId) {
+          <li>
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <p class="font-medium text-slate-800">{{ item.spaceName }}</p>
+              <p class="text-sm text-slate-500">
+                {{ item.reservations }} reservas · {{ hours(item.reservedMinutes) }} · ${{
+                  item.estimatedRevenue
+                }}
+              </p>
+            </div>
+            <div
+              class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-slate-100"
+              role="progressbar"
+              [attr.aria-valuenow]="item.occupancyPct"
+              aria-valuemin="0"
+              aria-valuemax="100"
+              [attr.aria-label]="'Ocupación de ' + item.spaceName"
+            >
+              <div
+                class="h-full rounded-full bg-indigo-500 transition-all duration-500"
+                [style.width.%]="item.occupancyPct"
+              ></div>
+            </div>
+            <div class="mt-1 flex flex-wrap items-center justify-between gap-1 text-xs">
+              <span class="text-slate-500">{{ item.occupancyPct }}% de ocupación</span>
+              @if (item.penalizedCancellations > 0) {
+                <span class="font-medium text-rose-600"
+                  >{{ item.penalizedCancellations }} cancelación(es) con penalización</span
+                >
+              }
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</section>

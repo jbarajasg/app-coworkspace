@@ -29,5 +29,11 @@ export const routes: Routes = [
       import('./features/calendar/calendar-page/calendar-page').then((m) => m.CalendarPage),
     title: 'Calendario | CoworkSpace',
   },
+  {
+    path: 'reportes',
+    loadComponent: () =>
+      import('./features/reports/reports-page/reports-page').then((m) => m.ReportsPage),
+    title: 'Reportes | CoworkSpace',
+  },
   { path: '**', redirectTo: 'espacios' },
 ];
