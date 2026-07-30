@@ -61,6 +61,24 @@ Una app de reservas tiene dos tipos de código con ritmos de cambio distintos. L
 
 ---
 
+## Componentes
+
+Todos los componentes son standalone. Las páginas se cargan con `loadComponent` (lazy).
+
+| Componente | Ruta | Responsabilidad |
+|---|---|---|
+| `App` (shell) | — | Header con navegación responsive (menú móvil), logo y `<router-outlet>`. |
+| `SpacesPage` | `/espacios` | Grid de tarjetas de espacios con estado. |
+| `ReservationFormPage` | `/reservas/nueva` |Formulario reactivo con validación. |
+| `ReservationsPage` | `/reservas` | Listado con filtros, cancelación con vista previa de penalización y marcado como completada. |
+| `CalendarPage` | `/calendario` | Grilla semanal de ocupación por espacio, resalta reservas en curso y navega al formulario con el slot prellenado. |
+| `ReportsPage` | `/reportes` | KPIs y barras de ocupación por espacio. |
+| `StatusBadge` | compartido | Único componente de UI reutilizable. |
+
+Los componentes no contienen lógica de negocio: leen señales de los stores y delegan las acciones en ellos.
+
+---
+
 ## Testing
 
 ```bash
