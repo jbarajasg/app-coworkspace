@@ -19,9 +19,14 @@ export function durationInMinutes(startTime: string, endTime: string): number {
   return timeToMinutes(endTime) - timeToMinutes(startTime);
 }
 
-/** Solapamiento de intervalos semiabiertos [inicio, fin): 10-12 y 12-14 NO solapan. */
+/**
+ * Solapamiento con intervalos CERRADOS: el enunciado (RN-01) prohíbe
+ * explícitamente una reserva de 12:00-14:00 si existe una de 10:00-12:00,
+ * por lo que compartir el instante de borde cuenta como conflicto.
+ * Nota: difiere de la convención semiabierta habitual; decisión documentada en el README.
+ */
 export function rangesOverlap(aStart: number, aEnd: number, bStart: number, bEnd: number): boolean {
-  return aStart < bEnd && bStart < aEnd;
+  return aStart <= bEnd && bStart <= aEnd;
 }
 
 /** Construye el Date local de inicio de una reserva. */

@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 
 import { routes } from './app.routes';
 
@@ -14,6 +14,6 @@ export const appConfig: ApplicationConfig = {
     { provide: SpaceRepository, useClass: InMemorySpaceRepository },
     { provide: ReservationRepository, useClass: InMemoryReservationRepository },
     provideBrowserGlobalErrorListeners(),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
   ],
 };

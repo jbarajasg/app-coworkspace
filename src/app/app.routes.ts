@@ -10,8 +10,18 @@ export const routes: Routes = [
   {
     path: 'reservas',
     loadComponent: () =>
-      import('./features/reservations/reservations-page').then((m) => m.ReservationsPage),
+      import('./features/reservations/reservations-page/reservations-page').then(
+        (m) => m.ReservationsPage,
+      ),
     title: 'Reservas | CoworkSpace',
+  },
+  {
+    path: 'reservas/nueva',
+    loadComponent: () =>
+      import('./features/reservations/reservation-form-page/reservation-form-page').then(
+        (m) => m.ReservationFormPage,
+      ),
+    title: 'Nueva reserva | CoworkSpace',
   },
   { path: '**', redirectTo: 'espacios' },
 ];

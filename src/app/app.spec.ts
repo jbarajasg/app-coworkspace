@@ -1,23 +1,31 @@
+import { provideZonelessChangeDetection } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { App } from './app';
+import { routes } from './app.routes';
 
-describe('App', () => {
+describe('App (shell)', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [provideZonelessChangeDetection(), provideRouter(routes)],
     }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it('crea la aplicación', () => {
     const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('muestra la marca y la navegación principal', () => {
     const fixture = TestBed.createComponent(App);
-    await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('CoworkSpace');
+    fixture.detectChanges();
+    const element: HTMLElement = fixture.nativeElement;
+
+    expect(element.textContent).toContain('CoworkSpace');
+
+    const links = element.querySelectorAll('nav[aria-label="Principal"] a');
+    expect(links.length).toBe(4); // Espacios, Reservas, Calendario, Reportes
   });
 });

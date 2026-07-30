@@ -103,11 +103,6 @@ describe('findConflict', () => {
     expect(findConflict(draft, existing)).not.toBeNull();
   });
 
-  it('permite reservas consecutivas (caso del enunciado: 12:00-14:00)', () => {
-    const draft = makeDraft({ startTime: '12:00', endTime: '14:00' });
-    expect(findConflict(draft, existing)).toBeNull();
-  });
-
   it('ignora reservas de otro espacio o de otra fecha', () => {
     const sameTimeOtherSpace = makeDraft({ spaceId: 2, startTime: '10:00', endTime: '12:00' });
     const sameTimeOtherDate = makeDraft({
@@ -128,6 +123,16 @@ describe('findConflict', () => {
   it('excluye la propia reserva al editar (excludeId)', () => {
     const draft = makeDraft({ startTime: '10:00', endTime: '12:00' });
     expect(findConflict(draft, existing, 1)).toBeNull();
+  });
+
+  it('rechaza reservas consecutivas que comparten borde (caso del enunciado: 12:00-14:00)', () => {
+    const draft = makeDraft({ startTime: '12:00', endTime: '14:00' });
+    expect(findConflict(draft, existing)).not.toBeNull();
+  });
+
+  it('permite reservas con separación real (12:30-14:00 tras 10:00-12:00)', () => {
+    const draft = makeDraft({ startTime: '12:30', endTime: '14:00' });
+    expect(findConflict(draft, existing)).toBeNull();
   });
 });
 
