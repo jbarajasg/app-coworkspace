@@ -23,6 +23,7 @@ import {
   MIN_DURATION_MINUTES,
   durationInMinutes,
   minutesToTime,
+  timeToMinutes,
 } from '../../../core/domain/rules/time';
 import { RuleViolation } from '../../../core/domain/rules/validation';
 import { validateSchedule } from '../../../core/domain/rules/reservation-rules';
@@ -49,6 +50,9 @@ export class ReservationFormPage {
   private readonly router = inject(Router);
   protected readonly spacesStore = inject(SpacesStore);
   private readonly reservationsStore = inject(ReservationsStore);
+
+  readonly fecha = input<string>();
+  readonly inicio = input<string>();
 
   /** Query param `?espacio=` enlazado por withComponentInputBinding. */
   readonly espacio = input<string>();
@@ -103,6 +107,15 @@ export class ReservationFormPage {
     void this.spacesStore.load();
     void this.reservationsStore.load(); // estado necesario para RN-01 en el submit
 
+    effect(() => {
+      const fecha = this.fecha();
+      if (fecha) this.form.patchValue({ date: fecha });
+      const inicio = this.inicio();
+      if (inicio) {
+        const end = Math.min(timeToMinutes(inicio) + MIN_DURATION_MINUTES, BUSINESS_END_MINUTES);
+        this.form.patchValue({ startTime: inicio, endTime: minutesToTime(end) });
+      }
+    });
     // Preselección desde ?espacio= cuando los espacios ya cargaron.
     effect(() => {
       const id = Number(this.espacio());

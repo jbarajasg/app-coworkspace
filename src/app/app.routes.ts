@@ -23,5 +23,11 @@ export const routes: Routes = [
       ),
     title: 'Nueva reserva | CoworkSpace',
   },
+  {
+    path: 'calendario',
+    loadComponent: () =>
+      import('./features/calendar/calendar-page/calendar-page').then((m) => m.CalendarPage),
+    title: 'Calendario | CoworkSpace',
+  },
   { path: '**', redirectTo: 'espacios' },
 ];
