@@ -11,7 +11,7 @@ Prueba técnica de Frontend Angular. SPA para gestionar reservas de espacios de 
 Requisitos: Node.js 20.19+ (desarrollado con 24.x) y npm.
 
 ```bash
-git clone <url-del-repo>
+git clone https://github.com/jbarajasg/app-coworkspace.git
 cd coworkspace-reservas
 npm install
 npm start          # ng serve → http://localhost:4200
