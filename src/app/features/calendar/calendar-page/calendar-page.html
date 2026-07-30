@@ -4,7 +4,6 @@
     Toca un horario ocupado para ver los detalles; un hueco libre te lleva a reservarlo.
   </p>
 
-  <!-- Controles -->
   <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <select
       [value]="selectedSpaceId()"
@@ -45,7 +44,6 @@
     </div>
   </div>
 
-  <!-- Leyenda -->
   <div class="mt-4 flex flex-wrap gap-4 text-xs text-slate-500">
     <span class="inline-flex items-center gap-1.5"
       ><span class="size-3 rounded border border-slate-300 bg-white"></span> Libre</span
@@ -62,7 +60,6 @@
   </div>
 
   <div class="mt-4 lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start lg:gap-6">
-    <!-- Grid semanal -->
     <div class="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
       <div class="min-w-[760px]">
         <div class="grid grid-cols-[56px_repeat(7,1fr)] border-b border-slate-200 bg-slate-50">
@@ -108,7 +105,6 @@
       </div>
     </div>
 
-    <!-- Panel de detalles -->
     <aside class="mt-6 lg:mt-0">
       @if (selectedReservation(); as reservation) {
         <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm lg:sticky lg:top-24">

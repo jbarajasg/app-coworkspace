@@ -11,7 +11,6 @@ import {
 } from './time';
 import { RuleViolation, ValidationResult, VALID, invalid } from './validation';
 
-/** RN-02 + RN-03: rango válido, dentro de horario laboral y duración 1–6h. */
 export function validateSchedule(startTime: string, endTime: string): readonly RuleViolation[] {
   const start = timeToMinutes(startTime);
   const end = timeToMinutes(endTime);
@@ -38,7 +37,6 @@ export function validateSchedule(startTime: string, endTime: string): readonly R
   return violations;
 }
 
-/** RN-01: devuelve la reserva confirmada que entra en conflicto, o null. */
 export function findConflict(
   draft: Pick<ReservationDraft, 'spaceId' | 'date' | 'startTime' | 'endTime'>,
   existing: readonly Reservation[],
@@ -58,7 +56,6 @@ export function findConflict(
   );
 }
 
-/** RN-05: capacidad del espacio. */
 export function validateCapacity(attendees: number, space: Space): readonly RuleViolation[] {
   if (!Number.isInteger(attendees) || attendees < 1) {
     return [{ code: 'CAPACITY_EXCEEDED', message: 'Debe asistir al menos una persona.' }];
@@ -74,14 +71,12 @@ export function validateCapacity(attendees: number, space: Space): readonly Rule
   return [];
 }
 
-/** Regla implícita: no se reserva un espacio en mantenimiento. */
 export function validateSpaceAvailability(space: Space): readonly RuleViolation[] {
   return space.status === 'En mantenimiento'
     ? [{ code: 'SPACE_UNAVAILABLE', message: `${space.name} está en mantenimiento.` }]
     : [];
 }
 
-/** Orquesta todas las reglas de creación (RN-01, RN-02, RN-03, RN-05). */
 export function validateReservation(
   draft: ReservationDraft,
   space: Space,

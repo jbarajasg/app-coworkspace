@@ -32,8 +32,6 @@ describe('ReservationFormPage (integración)', () => {
   });
 
   function fillForm(fixture: ComponentFixture<ReservationFormPage>, overrides = {}): void {
-    // Acceso al form protegido: en el test integramos por comportamiento,
-    // no por API pública del componente.
     (fixture.componentInstance as any).form.patchValue({
       spaceId: 1,
       date: isoDaysFromToday(5),

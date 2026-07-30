@@ -25,19 +25,19 @@ describe('durationInMinutes', () => {
 
 describe('rangesOverlap (intervalos cerrados, según RN-01 literal)', () => {
   it('detecta solapamiento parcial', () => {
-    expect(rangesOverlap(600, 720, 660, 780)).toBe(true); // 10-12 vs 11-13
+    expect(rangesOverlap(600, 720, 660, 780)).toBe(true);
   });
 
   it('detecta contención total', () => {
-    expect(rangesOverlap(600, 720, 630, 690)).toBe(true); // 10-12 contiene 10:30-11:30
+    expect(rangesOverlap(600, 720, 630, 690)).toBe(true);
   });
 
   it('considera conflicto los rangos consecutivos que comparten borde (enunciado: 12:00-14:00 tras 10:00-12:00)', () => {
-    expect(rangesOverlap(600, 720, 720, 840)).toBe(true); // 10-12 vs 12-14
-    expect(rangesOverlap(720, 840, 600, 720)).toBe(true); // simétrico
+    expect(rangesOverlap(600, 720, 720, 840)).toBe(true);
+    expect(rangesOverlap(720, 840, 600, 720)).toBe(true);
   });
 
   it('no hay conflicto cuando existe separación real entre rangos', () => {
-    expect(rangesOverlap(600, 720, 750, 810)).toBe(false); // 10-12 vs 12:30-13:30
+    expect(rangesOverlap(600, 720, 750, 810)).toBe(false);
   });
 });

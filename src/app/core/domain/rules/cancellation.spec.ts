@@ -5,17 +5,17 @@ describe('resolveCancellationStatus (RN-04)', () => {
   const reservation = { date: '2026-06-15', startTime: '10:00' };
 
   it('cancela sin penalización con más de 24h de anticipación', () => {
-    const now = new Date('2026-06-13T10:00:00'); // 48h antes
+    const now = new Date('2026-06-13T10:00:00');
     expect(resolveCancellationStatus(reservation, now)).toBe('Cancelada');
   });
 
   it('penaliza con menos de 24h de anticipación', () => {
-    const now = new Date('2026-06-14T20:00:00'); // 14h antes
+    const now = new Date('2026-06-14T20:00:00');
     expect(resolveCancellationStatus(reservation, now)).toBe('Cancelada con penalización');
   });
 
   it('penaliza en el límite exacto de 24h (la regla exige MÁS de 24h)', () => {
-    const now = new Date('2026-06-14T10:00:00'); // exactamente 24h
+    const now = new Date('2026-06-14T10:00:00');
     expect(resolveCancellationStatus(reservation, now)).toBe('Cancelada con penalización');
   });
 

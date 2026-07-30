@@ -2,10 +2,8 @@ import type { Reservation } from '../models/reservation.model';
 import type { Space } from '../models/space.model';
 import { BUSINESS_END_MINUTES, BUSINESS_START_MINUTES, durationInMinutes } from './time';
 
-/** Minutos operables por día según RN-02 (08:00–20:00). */
 export const BUSINESS_MINUTES_PER_DAY = BUSINESS_END_MINUTES - BUSINESS_START_MINUTES;
 
-/** Estados que ocupan realmente el espacio. Las cancelaciones no ocupan. */
 const OCCUPYING_STATUSES: ReadonlySet<Reservation['status']> = new Set([
   'Confirmada',
   'Completada',
@@ -18,9 +16,7 @@ export interface SpaceOccupancy {
   readonly spaceName: string;
   readonly reservations: number;
   readonly reservedMinutes: number;
-  /** Porcentaje 0–100 con un decimal: minutos reservados / minutos operables del período. */
   readonly occupancyPct: number;
-  /** RN-04: las cancelaciones con penalización se registran en el reporte. */
   readonly penalizedCancellations: number;
   readonly estimatedRevenue: number;
 }
@@ -38,7 +34,6 @@ export interface OccupancyReport {
   readonly topSpace: SpaceOccupancy | null;
 }
 
-/** Días del rango inclusivo [from, to]. Rango inválido o invertido ⇒ 0. */
 export function countDaysInRange(from: string, to: string): number {
   const start = Date.parse(`${from}T00:00:00Z`);
   const end = Date.parse(`${to}T00:00:00Z`);
@@ -56,7 +51,6 @@ export function computeOccupancyReport(
 ): OccupancyReport {
   const days = countDaysInRange(from, to);
   const availableMinutesPerSpace = days * BUSINESS_MINUTES_PER_DAY;
-  // Las fechas ISO (yyyy-MM-dd) se comparan correctamente como strings.
   const inRange = reservations.filter((r) => r.date >= from && r.date <= to);
 
   const bySpace: readonly SpaceOccupancy[] = spaces.map((space) => {

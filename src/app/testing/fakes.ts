@@ -44,7 +44,6 @@ export function isoDaysFromToday(days: number): string {
   return `${date.getFullYear()}-${month}-${day}`;
 }
 
-/** Fakes instantáneos de los puertos: sin latencia y controlables. */
 export class FakeSpaceRepository extends SpaceRepository {
   seed: Space[] = [makeSpace()];
   failNext = false;
@@ -82,10 +81,6 @@ export class FakeReservationRepository extends ReservationRepository {
   }
 }
 
-/**
- * Deja el fixture estable: agota los microtasks de los stores
- * (load/create/cancel son async) y fuerza change detection zoneless.
- */
 export async function settle(fixture: ComponentFixture<unknown>): Promise<void> {
   await new Promise((resolve) => setTimeout(resolve, 0));
   fixture.detectChanges();
@@ -93,7 +88,6 @@ export async function settle(fixture: ComponentFixture<unknown>): Promise<void> 
   fixture.detectChanges();
 }
 
-/** Click en el primer botón cuyo texto (trim) coincida exactamente. */
 export function clickButton(fixture: ComponentFixture<unknown>, text: string): void {
   const buttons = Array.from(
     fixture.nativeElement.querySelectorAll('button'),

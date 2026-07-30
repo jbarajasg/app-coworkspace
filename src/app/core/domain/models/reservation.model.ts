@@ -14,7 +14,6 @@ export const RESERVATION_STATUSES = [
 ] as const;
 export type ReservationStatus = (typeof RESERVATION_STATUSES)[number];
 
-/** `date` en formato ISO `yyyy-MM-dd`; horas en formato 24h `HH:mm`. */
 export interface Reservation {
   readonly id: number;
   readonly spaceId: number;
@@ -27,5 +26,4 @@ export interface Reservation {
   readonly status: ReservationStatus;
 }
 
-/** Solicitud de reserva: aún sin id ni estado (los asigna el sistema). */
 export type ReservationDraft = Omit<Reservation, 'id' | 'status'>;

@@ -6,7 +6,6 @@
     </p>
   </header>
 
-  <!-- Selector de período -->
   <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
     <div class="grid max-w-md gap-4 sm:grid-cols-2">
       <div>
@@ -59,7 +58,6 @@
   } @else {
     @let r = report();
 
-    <!-- KPIs -->
     <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
       <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
         <p class="text-sm text-slate-500">Reservas</p>
@@ -88,7 +86,6 @@
       </div>
     </div>
 
-    <!-- Espacio destacado -->
     @if (r.topSpace; as top) {
       <div
         class="rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 p-6 text-white shadow-sm"
@@ -97,16 +94,13 @@
         <div class="mt-1 flex flex-wrap items-baseline justify-between gap-2">
           <p class="text-2xl font-bold">{{ top.spaceName }}</p>
           <p class="text-sm text-indigo-100">
-            {{ top.occupancyPct }}% · {{ hours(top.reservedMinutes) }} · ${{
-              top.estimatedRevenue
-            }}
+            {{ top.occupancyPct }}% · {{ hours(top.reservedMinutes) }} · ${{ top.estimatedRevenue }}
             estimados
           </p>
         </div>
       </div>
     }
 
-    <!-- Ocupación por espacio -->
     <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <div class="flex flex-wrap items-baseline justify-between gap-2">
         <h2 class="text-lg font-semibold text-slate-900">Ocupación por espacio</h2>

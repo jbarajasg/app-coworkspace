@@ -5,11 +5,6 @@ import type { Space } from '../domain/models/space.model';
 import { ReservationRepository } from './ports';
 import { ReservationsStore } from './reservations.store';
 
-/**
- * Fake del puerto: instantáneo (sin latencia) y controlable.
- * Demuestra el valor de Clean Architecture: el store se prueba
- * sin tocar la infraestructura real.
- */
 class FakeReservationRepository extends ReservationRepository {
   seed: Reservation[] = [];
   failNextCreate = false;

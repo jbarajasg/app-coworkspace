@@ -29,7 +29,6 @@ function toIsoDate(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
-/** Lunes de la semana de la fecha dada. */
 function startOfWeek(date: Date): Date {
   const copy = new Date(date);
   copy.setDate(copy.getDate() - ((copy.getDay() + 6) % 7));
@@ -55,7 +54,6 @@ export class CalendarPage {
   protected readonly store = inject(ReservationsStore);
   private readonly router = inject(Router);
 
-  /** Reloj reactivo: en zoneless, actualizar la señal repinta las franjas "en curso". */
   protected readonly now = signal(new Date());
 
   protected readonly slotTimes: readonly string[] = (() => {
@@ -92,7 +90,6 @@ export class CalendarPage {
     return `${fmt.format(new Date(days[0]!.iso + 'T00:00:00'))} – ${fmt.format(new Date(days[6]!.iso + 'T00:00:00'))}`;
   });
 
-  /** Índice slot→reserva del espacio visible. Solo Confirmada y Completada ocupan. */
   private readonly occupiedSlots = computed(() => {
     const map = new Map<string, Reservation>();
     const spaceId = this.selectedSpaceId();
@@ -118,7 +115,6 @@ export class CalendarPage {
       }
     });
 
-    // Actualiza el reloj cada minuto para que "en curso" refleje el presente.
     const clock = setInterval(() => this.now.set(new Date()), 60_000);
     inject(DestroyRef).onDestroy(() => clearInterval(clock));
   }
@@ -131,7 +127,6 @@ export class CalendarPage {
     return reservation.date === dayIso && reservation.startTime === time;
   }
 
-  /** Expuesto al template: misma regla de dominio que el badge de espacios. */
   protected inProgress(reservation: Reservation): boolean {
     return isReservationInProgress(reservation, this.now());
   }

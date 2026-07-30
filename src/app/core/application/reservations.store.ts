@@ -30,10 +30,6 @@ export class ReservationsStore {
     }
   }
 
-  /**
-   * Caso de uso: crear reserva. Aplica RN-01, RN-02, RN-03 y RN-05
-   * contra el estado actual antes de persistir.
-   */
   async create(draft: ReservationDraft, space: Space): Promise<ValidationResult> {
     const result = validateReservation(draft, space, this._reservations());
     if (!result.valid) return result;
@@ -49,7 +45,6 @@ export class ReservationsStore {
     }
   }
 
-  /** Caso de uso: cancelar aplicando RN-04. Solo se cancelan reservas confirmadas. */
   async cancel(id: number, now: Date = new Date()): Promise<void> {
     const reservation = this._reservations().find((r) => r.id === id);
     if (!reservation || reservation.status !== 'Confirmada') return;
@@ -58,7 +53,6 @@ export class ReservationsStore {
     await this.persistStatus(id, status);
   }
 
-  /** Caso de uso: marcar como completada (transición Confirmada → Completada). */
   async complete(id: number): Promise<void> {
     const reservation = this._reservations().find((r) => r.id === id);
     if (!reservation || reservation.status !== 'Confirmada') return;

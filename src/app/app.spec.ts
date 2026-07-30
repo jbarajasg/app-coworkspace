@@ -26,6 +26,6 @@ describe('App (shell)', () => {
     expect(element.textContent).toContain('CoworkSpace');
 
     const links = element.querySelectorAll('nav[aria-label="Principal"] a');
-    expect(links.length).toBe(4); // Espacios, Reservas, Calendario, Reportes
+    expect(links.length).toBe(4);
   });
 });

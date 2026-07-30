@@ -2,12 +2,6 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Space } from '../../core/domain/models/space.model';
 import { validateCapacity, validateSchedule } from '../../core/domain/rules/reservation-rules';
 
-/**
- * Adaptadores: traducen las reglas puras del dominio al contrato de
- * Reactive Forms. La lógica vive en core/domain; aquí solo se mapea.
- */
-
-/** RN-02 + RN-03 como validador de grupo (campos startTime/endTime). */
 export function scheduleValidator(): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const start: string = group.get('startTime')?.value;
@@ -18,7 +12,6 @@ export function scheduleValidator(): ValidatorFn {
   };
 }
 
-/** RN-05 como validador de grupo; el espacio se resuelve vía lookup inyectado. */
 export function capacityValidator(spaceLookup: (id: number) => Space | undefined): ValidatorFn {
   return (group: AbstractControl): ValidationErrors | null => {
     const spaceId = Number(group.get('spaceId')?.value);
@@ -31,7 +24,6 @@ export function capacityValidator(spaceLookup: (id: number) => Space | undefined
   };
 }
 
-/** Regla de UX (no de negocio): no tiene sentido reservar en el pasado. */
 export function notPastDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value: string = control.value;

@@ -54,7 +54,6 @@ export class ReservationFormPage {
   readonly fecha = input<string>();
   readonly inicio = input<string>();
 
-  /** Query param `?espacio=` enlazado por withComponentInputBinding. */
   readonly espacio = input<string>();
 
   protected readonly purposes = RESERVATION_PURPOSES;
@@ -91,7 +90,6 @@ export class ReservationFormPage {
     this.spacesStore.spaceById(Number(this.formValue().spaceId ?? 0)),
   );
 
-  /** Coste estimado en vivo: duración × precio/hora del espacio elegido. */
   protected readonly estimatedCost = computed(() => {
     const { startTime, endTime } = this.formValue();
     const space = this.selectedSpace();
@@ -105,7 +103,7 @@ export class ReservationFormPage {
 
   constructor() {
     void this.spacesStore.load();
-    void this.reservationsStore.load(); // estado necesario para RN-01 en el submit
+    void this.reservationsStore.load();
 
     effect(() => {
       const fecha = this.fecha();
@@ -116,7 +114,6 @@ export class ReservationFormPage {
         this.form.patchValue({ startTime: inicio, endTime: minutesToTime(end) });
       }
     });
-    // Preselección desde ?espacio= cuando los espacios ya cargaron.
     effect(() => {
       const id = Number(this.espacio());
       if (id > 0 && this.spacesStore.spaceById(id)) {

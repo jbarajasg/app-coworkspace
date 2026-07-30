@@ -9,8 +9,6 @@ import {
   validateSpaceAvailability,
 } from './reservation-rules';
 
-// --- Test data builders ---------------------------------------------------
-
 function makeSpace(overrides: Partial<Space> = {}): Space {
   return {
     id: 1,
@@ -54,8 +52,6 @@ function makeDraft(overrides: Partial<ReservationDraft> = {}): ReservationDraft 
 
 const codes = (violations: readonly { code: string }[]) => violations.map((v) => v.code);
 
-// --- RN-02 / RN-03: horario laboral y duración ----------------------------
-
 describe('validateSchedule', () => {
   it('acepta un rango válido dentro del horario laboral', () => {
     expect(validateSchedule('10:00', '12:00')).toEqual([]);
@@ -93,10 +89,8 @@ describe('validateSchedule', () => {
   });
 });
 
-// --- RN-01: prevención de overbooking -------------------------------------
-
 describe('findConflict', () => {
-  const existing = [makeReservation()]; // 10:00-12:00 Confirmada
+  const existing = [makeReservation()];
 
   it('detecta solapamiento parcial (caso del enunciado: 11:00-13:00)', () => {
     const draft = makeDraft({ startTime: '11:00', endTime: '13:00' });
@@ -136,8 +130,6 @@ describe('findConflict', () => {
   });
 });
 
-// --- RN-05: capacidad ------------------------------------------------------
-
 describe('validateCapacity', () => {
   const space = makeSpace({ capacity: 6 });
 
@@ -157,8 +149,6 @@ describe('validateCapacity', () => {
   });
 });
 
-// --- Espacio en mantenimiento ----------------------------------------------
-
 describe('validateSpaceAvailability', () => {
   it('rechaza espacios en mantenimiento', () => {
     const space = makeSpace({ status: 'En mantenimiento' });
@@ -170,8 +160,6 @@ describe('validateSpaceAvailability', () => {
     expect(validateSpaceAvailability(makeSpace({ status: 'Ocupado' }))).toEqual([]);
   });
 });
-
-// --- Orquestador -----------------------------------------------------------
 
 describe('validateReservation', () => {
   it('devuelve valid=true cuando todas las reglas pasan', () => {

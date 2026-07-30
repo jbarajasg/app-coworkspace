@@ -22,7 +22,6 @@ export class ReservationsPage {
 
   protected readonly statuses = RESERVATION_STATUSES;
 
-  // --- Filtros (RF-04) ---
   protected readonly filterDate = signal('');
   protected readonly filterSpaceId = signal(0);
   protected readonly filterStatus = signal<'' | ReservationStatus>('');
@@ -46,7 +45,6 @@ export class ReservationsPage {
     () => !!this.filterDate() || this.filterSpaceId() !== 0 || !!this.filterStatus(),
   );
 
-  // --- Cancelación con confirmación (RN-04) ---
   protected readonly pendingCancel = signal<Reservation | null>(null);
   protected readonly penaltyApplies = computed(() => {
     const reservation = this.pendingCancel();

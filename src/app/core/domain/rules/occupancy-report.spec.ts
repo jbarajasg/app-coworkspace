@@ -55,7 +55,6 @@ describe('computeOccupancyReport', () => {
   });
 
   it('calcula minutos, porcentaje e ingresos para un día y un espacio', () => {
-    // 2h de 12h operables = 16.7%; 2h × $25 = $50
     const report = computeOccupancyReport(
       [makeSpace()],
       [makeReservation()],

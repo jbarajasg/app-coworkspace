@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { makeReservation, makeSpace } from '../../../testing/fakes';
 import { isReservationInProgress, resolveSpaceStatus } from './space-status';
 
-// Reserva fija: 2026-06-15 de 10:00 a 12:00
 const reservation = makeReservation();
 const space = makeSpace();
 const at = (time: string) => new Date(`2026-06-15T${time}:00`);

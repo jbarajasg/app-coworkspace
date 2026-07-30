@@ -2,11 +2,6 @@ import type { Reservation } from '../models/reservation.model';
 import type { Space, SpaceStatus } from '../models/space.model';
 import { timeToMinutes } from './time';
 
-/**
- * 'Ocupado' es estado derivado, no persistido: un espacio está ocupado
- * si ahora mismo transcurre una reserva Confirmada. 'En mantenimiento'
- * es administrativo y tiene prioridad.
- */
 export function resolveSpaceStatus(
   space: Space,
   reservations: readonly Reservation[],
@@ -21,7 +16,6 @@ export function resolveSpaceStatus(
   return occupiedNow ? 'Ocupado' : 'Disponible';
 }
 
-/** Una reserva está en curso si es hoy, Confirmada, y la hora actual cae dentro de [inicio, fin). */
 export function isReservationInProgress(
   reservation: Pick<Reservation, 'date' | 'startTime' | 'endTime' | 'status'>,
   now: Date,

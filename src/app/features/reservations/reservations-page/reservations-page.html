@@ -12,7 +12,6 @@
     </a>
   </div>
 
-  <!-- Filtros -->
   <div
     class="mt-6 grid grid-cols-1 gap-3 rounded-2xl border border-slate-200 bg-white p-4 sm:grid-cols-3 lg:grid-cols-4"
   >
@@ -96,7 +95,6 @@
       }
     </div>
   } @else {
-    <!-- Desktop: tabla -->
     <div class="mt-6 hidden overflow-hidden rounded-2xl border border-slate-200 bg-white md:block">
       <table class="w-full text-left text-sm">
         <thead
@@ -153,7 +151,6 @@
       </table>
     </div>
 
-    <!-- Mobile: cards -->
     <div class="mt-6 space-y-3 md:hidden">
       @for (reservation of filtered(); track reservation.id) {
         <article class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -194,7 +191,6 @@
     </div>
   }
 
-  <!-- Diálogo de confirmación de cancelación (RN-04) -->
   @if (pendingCancel(); as reservation) {
     <div class="fixed inset-0 z-50 grid place-items-center p-4">
       <div
