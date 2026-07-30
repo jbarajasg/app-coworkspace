@@ -1,6 +1,6 @@
 # CoworkSpace — Plataforma de reservas de espacios
 
-[CoworkSpace/Pagina]([https://ejemplo.com](https://jbarajasg.github.io/CoworkSpace/CoworkSpace/espacios))
+[CoworkSpace Pagina Oficial](https://jbarajasg.github.io/CoworkSpace/CoworkSpace/espacios)
 
 Prueba técnica de Frontend Angular. SPA para gestionar reservas de espacios de coworking: listado de espacios, creación de reservas con validación de reglas de negocio, calendario semanal de ocupación, gestión de reservas (cancelar/completar) y reporte de ocupación. Frontend puro con datos simulados.
 
