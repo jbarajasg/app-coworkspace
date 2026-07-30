@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  DestroyRef,
   effect,
   inject,
   signal,
@@ -10,6 +11,7 @@ import { Router, RouterLink } from '@angular/router';
 import { ReservationsStore } from '../../../core/application/reservations.store';
 import { SpacesStore } from '../../../core/application/spaces.store';
 import { Reservation } from '../../../core/domain/models/reservation.model';
+import { isReservationInProgress } from '../../../core/domain/rules/space-status';
 import {
   BUSINESS_END_MINUTES,
   BUSINESS_START_MINUTES,
@@ -52,6 +54,9 @@ export class CalendarPage {
   protected readonly spacesStore = inject(SpacesStore);
   protected readonly store = inject(ReservationsStore);
   private readonly router = inject(Router);
+
+  /** Reloj reactivo: en zoneless, actualizar la señal repinta las franjas "en curso". */
+  protected readonly now = signal(new Date());
 
   protected readonly slotTimes: readonly string[] = (() => {
     const out: string[] = [];
@@ -112,6 +117,10 @@ export class CalendarPage {
         this.selectedSpaceId.set(spaces[0]!.id);
       }
     });
+
+    // Actualiza el reloj cada minuto para que "en curso" refleje el presente.
+    const clock = setInterval(() => this.now.set(new Date()), 60_000);
+    inject(DestroyRef).onDestroy(() => clearInterval(clock));
   }
 
   protected slotFor(dayIso: string, time: string): Reservation | undefined {
@@ -122,14 +131,20 @@ export class CalendarPage {
     return reservation.date === dayIso && reservation.startTime === time;
   }
 
+  /** Expuesto al template: misma regla de dominio que el badge de espacios. */
+  protected inProgress(reservation: Reservation): boolean {
+    return isReservationInProgress(reservation, this.now());
+  }
+
   protected slotClasses(dayIso: string, time: string): string {
     const reservation = this.slotFor(dayIso, time);
     if (!reservation) {
       return 'bg-white hover:bg-indigo-50';
     }
     const isSelected = this.selectedReservation()?.id === reservation.id;
-    const base =
-      reservation.status === 'Completada'
+    const base = this.inProgress(reservation)
+      ? 'bg-amber-400/90 hover:bg-amber-400'
+      : reservation.status === 'Completada'
         ? 'bg-emerald-400/80 hover:bg-emerald-400'
         : 'bg-indigo-500/90 hover:bg-indigo-500';
     return isSelected ? `${base} ring-2 ring-inset ring-slate-900/40` : base;
@@ -142,9 +157,11 @@ export class CalendarPage {
       month: 'long',
     }).format(new Date(`${dayIso}T00:00:00`));
     const reservation = this.slotFor(dayIso, time);
-    return reservation
-      ? `${day}, ${time}: ocupado por ${reservation.requester} (${reservation.purpose}, ${reservation.status}). Ver detalles.`
-      : `${day}, ${time}: libre. Crear reserva.`;
+    if (!reservation) {
+      return `${day}, ${time}: libre. Crear reserva.`;
+    }
+    const state = this.inProgress(reservation) ? 'ocupado ahora (en curso)' : 'ocupado';
+    return `${day}, ${time}: ${state} por ${reservation.requester} (${reservation.purpose}, ${reservation.status}). Ver detalles.`;
   }
 
   protected setSpace(event: Event): void {
