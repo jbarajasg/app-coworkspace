@@ -5,7 +5,8 @@ export type RuleCode =
   | 'DURATION_TOO_LONG'
   | 'OVERLAP'
   | 'CAPACITY_EXCEEDED'
-  | 'SPACE_UNAVAILABLE';
+  | 'SPACE_UNAVAILABLE'
+  | 'PERSISTENCE';
 
 export interface RuleViolation {
   readonly code: RuleCode;
